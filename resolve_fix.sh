@@ -9,11 +9,23 @@ select lang in "en-US" "pt-BR"; do
       select yn in "Yes" "No"; do
         case $yn in
           Yes )
-            yay -S --noconfirm davinci-resolve-studio;
+            yay -S --needed --noconfirm davinci-resolve-studio;
             sudo mkdir /opt/resolve/libs/disabled;
             sudo mv /opt/resolve/libs/libgmodule-2.0.so* /opt/resolve/libs/disabled/;
             sudo mv /opt/resolve/libs/libgio-2.0.so* /opt/resolve/libs/disabled/;
             sudo mv /opt/resolve/libs/libglib-2.0.so* /opt/resolve/libs/disabled/;
+            gpu=$(lspci | grep -i '.* vga .* nvidia .*')
+            shopt -s nocasematch
+            if [[ $gpu == *' nvidia '* ]]; then
+              gpus=$(lspci | grep VGA | wc -l)
+              if [ "$gpus" -gt 1 ]; then
+                sudo sed -i 's|^Exec=/opt/resolve/bin/resolve %u$|Exec=prime-run /opt/resolve/bin/resolve %u|' /usr/share/applications/DaVinciResolve.desktop
+              else
+                echo "No Nvidia PRIME setup detected, skipping..."
+              fi
+            else
+              echo "No Nvidia GPU detected."
+            fi;
             echo "Job finished. You may use DaVinci Resolve Studio now. It will take some time to load the Fairlight Engine for the first time, but it's not frozen. Be patient!";
             exit 0;;
           No ) exit 0;;
@@ -26,15 +38,27 @@ select lang in "en-US" "pt-BR"; do
       select sn in "Sim" "Não"; do
         case $sn in
           Sim )
-            yay -S --noconfirm davinci-resolve-studio;
+            yay -S --needed --noconfirm davinci-resolve-studio;
             sudo mkdir /opt/resolve/libs/disabled;
             sudo mv /opt/resolve/libs/libgmodule-2.0.so* /opt/resolve/libs/disabled/;
             sudo mv /opt/resolve/libs/libgio-2.0.so* /opt/resolve/libs/disabled/;
             sudo mv /opt/resolve/libs/libglib-2.0.so* /opt/resolve/libs/disabled/;
+            gpu=$(lspci | grep -i '.* vga .* nvidia .*')
+            shopt -s nocasematch
+            if [[ $gpu == *' nvidia '* ]]; then
+              gpus=$(lspci | grep VGA | wc -l)
+              if [ "$gpus" -gt 1 ]; then
+                sudo sed -i 's|^Exec=/opt/resolve/bin/resolve %u$|Exec=prime-run /opt/resolve/bin/resolve %u|' /usr/share/applications/DaVinciResolve.desktop
+              else
+                echo "No Nvidia PRIME setup detected, skipping..."
+              fi
+            else
+              echo "No Nvidia GPU detected."
+            fi;
             echo "Concluído. Você pode utilizar o seu software agora. Ele levará algum tempo para iniciar o Fairlight Engine pela primeira vez, mas não estará travado, então seja paciente!";
             exit 0;;
           Não ) exit 0;;
         esac;
       done;;
-    esac
+  esac
 done
