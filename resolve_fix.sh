@@ -1,5 +1,13 @@
 #!/bin/sh
 #FUNCTIONS
+#yay check
+yay_func() {
+	if pacman -Qs yay > /dev/null; then
+        echo "YAY already installed, proceeding..."
+    else
+        cd && pacman -S --needed --noconfirm git base-devel && git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si && cd && rm -r ~/yay
+    fi
+}
 #yay package patch - unknown symbol fix
 symbol_fix() {
 	yay -S --needed --noconfirm davinci-resolve-studio
@@ -44,6 +52,7 @@ if [ "$ulang" == "en" ]; then
     select yn in "Yes" "No"; do
         case $yn in
             Yes )
+                yay_check;
                 symbol_fix;
                 hybrid_fix;
                 echo "Job finished. You may use DaVinci Resolve Studio now. It will take some time to load the Fairlight Engine for the first time, but it's not frozen. Be patient!";
@@ -60,6 +69,7 @@ elif [ "$ulang" == "pt" ]; then
     select sn in "Sim" "Não"; do
         case $sn in
             Sim )
+                yay_check;
                 symbol_fix;
                 hybrid_fix;
                 echo "Concluído. Você pode utilizar o seu software agora. Ele levará algum tempo para iniciar o Fairlight Engine pela primeira vez, mas não estará travado, então seja paciente!";
