@@ -1,4 +1,4 @@
 # resolve-fix
-Shell script for Arch-based Linux distributions that automatically installs **DaVinci Resolve Studio** from the Arch User Repository and patches a common '*undefined symbol*' error and an '*out of GPU memory*' error on hybrid GPU setups.
+Install and patch DaVinci Resolve for it to work properly in Arch and Fedora. Works for both Free and Studio versions. 
 
 **Information on usage in Wiki.**
